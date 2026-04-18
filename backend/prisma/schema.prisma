@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id         String     @id @default(uuid())
+  name       String
+  email      String     @unique
+  password   String
+  avatarUrl  String?
+  tasks      Task[]
+  categories Category[] 
+  tags       Tag[]      
+  createdAt  DateTime   @default(now())
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String
+  color     String
+  isDefault Boolean  @default(false) 
+  userId    String?  
+  user      User?    @relation(fields: [userId], references: [id])
+  tasks     Task[]
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  name      String
+  color     String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  tasks     Task[]   
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  priority    String     @default("MEDIUM") // LOW, MEDIUM, HIGH
+  status      String     @default("PENDING") // PENDING, DONE
+  color       String?    // Personalização de cor no cartão
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  categories  Category[] // N:N - Múltiplas Categorias
+  tags        Tag[]     
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
