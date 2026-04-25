@@ -46,7 +46,7 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
 
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' });
 
-    res.status(201).json({ token, user: { id: user.id, name: user.name, email: user.email, avatarUrl: user.avatarUrl } });
+    res.status(201).json({ token, user: { id: user.id, name: user.name, email: user.email, avatarUrl: user.avatarUrl, bannerUrl: user.bannerUrl } });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erro no servidor' });
@@ -77,7 +77,7 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
 
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' });
 
-    res.json({ token, user: { id: user.id, name: user.name, email: user.email, avatarUrl: user.avatarUrl } });
+    res.json({ token, user: { id: user.id, name: user.name, email: user.email, avatarUrl: user.avatarUrl, bannerUrl: user.bannerUrl } });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erro no servidor' });

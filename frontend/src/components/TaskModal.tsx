@@ -101,32 +101,42 @@ export default function TaskModal({ isOpen, onClose, taskToEdit, categories }: T
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div 
-        className="border border-slate-700/60 p-6 rounded-2xl shadow-2xl w-full max-w-xl animate-in zoom-in-95 duration-200 relative transition-colors"
-        style={{ backgroundColor: formData.color === 'transparent' ? '#121214' : formData.color }}
+        className="p-6 rounded-2xl shadow-2xl w-full max-w-xl animate-in zoom-in-95 duration-200 relative transition-colors"
+        style={{ 
+          backgroundColor: formData.color === 'transparent' ? 'var(--modal-bg)' : formData.color,
+          border: '1px solid var(--border-strong)'
+        }}
       >
-        <div className="absolute inset-0 bg-[#121214]/80 rounded-2xl pointer-events-none -z-10 backdrop-blur-md"></div>
+        <div 
+          className="absolute inset-0 rounded-2xl pointer-events-none -z-10 backdrop-blur-md"
+          style={{ backgroundColor: formData.color === 'transparent' ? 'transparent' : 'var(--modal-bg)', opacity: 0.8 }}
+        />
         
         <div className="flex justify-between items-center mb-6 relative z-10">
-          <h3 className="text-xl font-bold text-white">
+          <h3 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
             {taskToEdit ? 'Editar Tarefa' : 'Nova Tarefa'}
           </h3>
           <div className="flex items-center gap-2">
             <div className="relative">
               <button 
                 onClick={() => setShowColorPicker(!showColorPicker)}
-                className="p-2 bg-white/5 hover:bg-white/10 text-slate-300 rounded-full transition-colors"
+                className="p-2 rounded-full transition-colors cursor-pointer"
+                style={{ backgroundColor: 'var(--surface-hover)', color: 'var(--text-secondary)' }}
                 title="Cor de Fundo do Cartão"
               >
                 <Palette size={18} />
               </button>
               {showColorPicker && (
-                <div className="absolute right-0 top-full mt-2 p-2 bg-slate-900 border border-slate-700 rounded-xl shadow-xl flex gap-2 z-50">
+                <div 
+                  className="absolute right-0 top-full mt-2 p-2 rounded-xl shadow-xl flex gap-2 z-50"
+                  style={{ backgroundColor: 'var(--surface-elevated)', border: '1px solid var(--border-strong)' }}
+                >
                   {PRESET_COLORS.map(color => (
                     <button
                       key={color}
                       onClick={() => { setFormData({ ...formData, color }); setShowColorPicker(false); }}
-                      className={`w-6 h-6 rounded-full border-2 ${formData.color === color ? 'border-white' : 'border-transparent hover:scale-110'} transition-all`}
-                      style={{ backgroundColor: color === 'transparent' ? '#333' : color.replace('0.2', '1') }}
+                      className={`w-6 h-6 rounded-full border-2 ${formData.color === color ? 'border-white' : 'border-transparent hover:scale-110'} transition-all cursor-pointer`}
+                      style={{ backgroundColor: color === 'transparent' ? 'var(--text-muted)' : color.replace('0.2', '1') }}
                       title={color === 'transparent' ? 'Padrão' : 'Cor Customizada'}
                     >
                       {color === 'transparent' && <span className="block text-[8px] text-white">ø</span>}
@@ -135,43 +145,62 @@ export default function TaskModal({ isOpen, onClose, taskToEdit, categories }: T
                 </div>
               )}
             </div>
-            <button onClick={onClose} className="p-2 bg-slate-800/50 hover:bg-slate-700/50 text-slate-400 hover:text-white rounded-full transition-colors">
+            <button 
+              onClick={onClose} 
+              className="p-2 rounded-full transition-colors cursor-pointer"
+              style={{ backgroundColor: 'var(--surface-hover)', color: 'var(--text-muted)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text-primary)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-muted)'; }}
+            >
               <X size={20} />
             </button>
           </div>
         </div>
         
         {formError && (
-          <div className="text-red-400 text-sm mb-6 bg-red-500/10 p-3 rounded-xl border border-red-500/20 relative z-10">
+          <div 
+            className="text-sm mb-6 p-3 rounded-xl relative z-10"
+            style={{ backgroundColor: 'var(--danger-subtle)', color: 'var(--danger)', border: '1px solid var(--danger)' }}
+          >
             {formError}
           </div>
         )}
 
         <div className="space-y-4 relative z-10">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Título *</label>
+            <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Título *</label>
             <input 
               type="text" 
               placeholder="Ex: Finalizar relatório mensal..." 
-              className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:bg-black/60 transition-all placeholder:text-slate-500"
+              className="w-full rounded-xl px-4 py-3 focus:outline-none transition-all"
+              style={{ 
+                backgroundColor: 'var(--input-bg)', 
+                border: '1px solid var(--border)',
+                color: 'var(--text-primary)'
+              }}
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Descrição</label>
+            <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Descrição</label>
             <textarea 
               placeholder="Detalhes adicionais..." 
               rows={3}
-              className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:bg-black/60 transition-all placeholder:text-slate-500 resize-none"
+              className="w-full rounded-xl px-4 py-3 focus:outline-none transition-all resize-none"
+              style={{ 
+                backgroundColor: 'var(--input-bg)', 
+                border: '1px solid var(--border)',
+                color: 'var(--text-primary)'
+              }}
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">Categorias (Múltipla Seleção)</label>
+            <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>Categorias (Múltipla Seleção)</label>
             <div className="flex flex-wrap gap-2">
               {categories?.map(c => {
                 const isSelected = formData.categoryIds.includes(c.id);
@@ -179,22 +208,36 @@ export default function TaskModal({ isOpen, onClose, taskToEdit, categories }: T
                   <button
                     key={c.id}
                     onClick={() => toggleCategory(c.id)}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all border ${isSelected ? 'bg-opacity-20 shadow-sm' : 'bg-transparent border-white/10 text-slate-400 hover:bg-white/5'}`}
-                    style={isSelected ? { backgroundColor: c.color, borderColor: c.color, color: '#fff' } : {}}
+                    className="px-3 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer"
+                    style={isSelected ? { 
+                      backgroundColor: c.color, 
+                      borderColor: c.color, 
+                      color: '#fff',
+                      border: `1px solid ${c.color}`
+                    } : { 
+                      backgroundColor: 'transparent', 
+                      border: '1px solid var(--border)',
+                      color: 'var(--text-secondary)' 
+                    }}
                   >
                     {c.name}
                   </button>
                 );
               })}
-              {categories?.length === 0 && <span className="text-sm text-slate-500">Nenhuma categoria criada.</span>}
+              {categories?.length === 0 && <span className="text-sm" style={{ color: 'var(--text-muted)' }}>Nenhuma categoria criada.</span>}
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Prioridade</label>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Prioridade</label>
               <select 
-                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-all cursor-pointer"
+                className="w-full rounded-xl px-4 py-3 focus:outline-none transition-all cursor-pointer"
+                style={{ 
+                  backgroundColor: 'var(--input-bg)', 
+                  border: '1px solid var(--border)',
+                  color: 'var(--text-primary)'
+                }}
                 value={formData.priority}
                 onChange={(e) => setFormData({...formData, priority: e.target.value})}
               >
@@ -204,10 +247,15 @@ export default function TaskModal({ isOpen, onClose, taskToEdit, categories }: T
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Data Limite (Opcional)</label>
+              <label className="block text-sm font-medium mb-1.5" style={{ color: 'var(--text-secondary)' }}>Data Limite (Opcional)</label>
               <input 
                 type="date" 
-                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-all cursor-pointer"
+                className="w-full rounded-xl px-4 py-3 focus:outline-none transition-all cursor-pointer"
+                style={{ 
+                  backgroundColor: 'var(--input-bg)', 
+                  border: '1px solid var(--border)',
+                  color: 'var(--text-primary)'
+                }}
                 value={formData.dueDate}
                 onChange={(e) => setFormData({...formData, dueDate: e.target.value})}
               />
@@ -215,17 +263,30 @@ export default function TaskModal({ isOpen, onClose, taskToEdit, categories }: T
           </div>
         </div>
         
-        <div className="flex justify-end space-x-3 mt-8 border-t border-white/10 pt-6 relative z-10">
+        <div className="flex justify-end space-x-3 mt-8 pt-6 relative z-10" style={{ borderTop: '1px solid var(--border)' }}>
           <button 
             onClick={onClose}
-            className="px-5 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 rounded-xl transition-colors font-medium"
+            className="px-5 py-2.5 rounded-xl transition-colors font-medium cursor-pointer"
+            style={{ backgroundColor: 'var(--surface-hover)', color: 'var(--text-secondary)' }}
           >
             Cancelar
           </button>
           <button 
             onClick={handleSave}
             disabled={saveTask.isPending}
-            className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-medium py-2.5 px-6 rounded-xl transition-all shadow-[0_0_15px_rgba(79,70,229,0.3)] hover:shadow-[0_0_20px_rgba(79,70,229,0.5)]"
+            className="text-white font-medium py-2.5 px-6 rounded-xl transition-all disabled:opacity-50 cursor-pointer"
+            style={{ 
+              backgroundColor: 'var(--accent)',
+              boxShadow: `0 0 15px var(--accent-glow)`
+            }}
+            onMouseEnter={(e) => { 
+              e.currentTarget.style.backgroundColor = 'var(--accent-hover)';
+              e.currentTarget.style.boxShadow = `0 0 20px var(--accent-glow)`;
+            }}
+            onMouseLeave={(e) => { 
+              e.currentTarget.style.backgroundColor = 'var(--accent)';
+              e.currentTarget.style.boxShadow = `0 0 15px var(--accent-glow)`;
+            }}
           >
             {saveTask.isPending ? 'Salvando...' : 'Salvar Tarefa'}
           </button>
